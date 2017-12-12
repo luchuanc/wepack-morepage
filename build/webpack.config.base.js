@@ -1,8 +1,9 @@
 const path = require('path');
 const fs = require('fs');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 const utils = require('./utils');
@@ -75,7 +76,13 @@ module.exports = {
 		]
 	},
 	plugins: [
-		// 将 css 抽取到某个文件夹
+		//静态资源拷贝
+		new CopyWebpackPlugin([
+        {
+            from: 'src/static',
+            to: 'static'
+        }]), 
+        // 将 css 抽取到某个文件夹
 		new ExtractTextPlugin({
 			// 生成css文件名
 			filename: 'css/[name].[hash].css',

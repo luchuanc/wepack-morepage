@@ -3,6 +3,7 @@ const path = require('path');
 const webpackBase = require('./webpack.config.base');
 const webpackMerge = require('webpack-merge');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // 合并配置文件
 module.exports = webpackMerge(webpackBase, {

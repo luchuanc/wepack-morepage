@@ -8,7 +8,9 @@ const generateFile = (fileName, title) => {
 	<head>
 		<meta charset='UTF-8'>
 		<title>${title}</title>
-		<meta name='viewport' content='width=750, user-scalable=no, target-densitydpi=device-dpi'>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' />
+		<link href="./static/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body>
 		<script src='https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js'></script>
