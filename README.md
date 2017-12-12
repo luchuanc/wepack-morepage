@@ -1,9 +1,9 @@
 # multiple page
 
-A project template for multiple page project develop.
+A project template for morepage project develop.
 
 ## Script
-
-1. `init-page`: create page
-1. `dev`: local develop
-1. `build`: build for prod
+ 
+1. `npm run create`: creat e page
+1. `npm run dev`: local develop
+1. `npm run build`: build for prod
