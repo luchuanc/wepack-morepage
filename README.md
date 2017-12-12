@@ -1,4 +1,4 @@
-# multiple page
+# morepage
 
 A project template for morepage project develop.
 
