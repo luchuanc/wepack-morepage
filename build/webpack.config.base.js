@@ -3,9 +3,9 @@ const fs = require('fs');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-
+const webpack = require('webpack');
 const utils = require('./utils');
 const runEnv = JSON.stringify(require('./run-env'));
 
@@ -52,14 +52,45 @@ module.exports = {
 		        loader: 'babel-loader',
 		        include: [resolve('src'), resolve('test')]
 		    },
-			{  
-                test: /\.css$/,  
-                loader: 'style-loaer!css-loader'  
-            }, 
 			{
-				test: /\.less$/, 
-				loader: 'style-loader!css-loader!less-loader'
-			},
+                test: /\.css$/,
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
+            },
+            {
+                test: /\.less$/,
+                use: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            root: path.resolve(__dirname, '../src/img'),   // url里，以 / 开头的路径，去找src/static文件夹
+                            minimize: true, // 压缩css代码
+                            // sourceMap: true,    // sourceMap，默认关闭
+                            alias: {
+                                '@': path.resolve(__dirname, '../src/img') // '~@/logo.png' 这种写法，会去找src/img/logo.png这个文件
+                            }
+                        }
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            config: {
+                                path: './config'
+                            },
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'less-loader',   // compiles Less to CSS
+                        options: {
+                            
+                        }
+                    }
+                ]
+            },
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
 				loader: 'url-loader',
@@ -76,6 +107,13 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new webpack.LoaderOptionsPlugin({
+		    options: {
+		      postcss: function () {
+		        return [precss, autoprefixer];
+		      }
+		    }
+		 }),
 		//静态资源拷贝
 		new CopyWebpackPlugin([
         {
