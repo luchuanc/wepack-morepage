@@ -5,6 +5,8 @@ const config = require('./config');
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 
+var env = config.dev.env;
+
 Object.keys(webpackBase.entry).forEach(function (name) {
   webpackBase.entry[name] = ['./build/dev-client'].concat(webpackBase.entry[name])
 })
@@ -17,6 +19,9 @@ module.exports = webpackMerge(webpackBase, {
 	},
 	devtool: '#source-map',
 	plugins: [
+		new webpack.DefinePlugin({
+	      'process.env': env
+	    }),
 		new webpack.HotModuleReplacementPlugin(),
     	new webpack.NoEmitOnErrorsPlugin(),
     	new FriendlyErrorsPlugin()

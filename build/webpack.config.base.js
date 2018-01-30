@@ -8,6 +8,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 const utils = require('./utils');
 const runEnv = JSON.stringify(require('./run-env'));
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 // 入口html数组
 let HTMLDirs = utils.getFileNameList('./src/html');
@@ -52,14 +53,22 @@ module.exports = {
 		        loader: 'babel-loader',
 		        include: [resolve('src'), resolve('test')]
 		    },
-			{
+			/*{
                 test: /\.css$/,
                 use: [
                     'style-loader',
-                    'css-loader'
+                    'css-loader',
+                    'postcss-loader'
                 ]
-            },
+            },*/
             {
+		      test: /\.(css|less)$/,
+		      loader: ExtractTextPlugin.extract({
+		        fallbackLoader: 'style-loader',
+		        loader: 'css-loader!postcss-loader!less-loader'
+		      })
+		    },
+            /*{
                 test: /\.less$/,
                 use: [
                     'style-loader',
@@ -68,7 +77,6 @@ module.exports = {
                         options: {
                             root: path.resolve(__dirname, '../src/img'),   // url里，以 / 开头的路径，去找src/static文件夹
                             minimize: true, // 压缩css代码
-                            // sourceMap: true,    // sourceMap，默认关闭
                             alias: {
                                 '@': path.resolve(__dirname, '../src/img') // '~@/logo.png' 这种写法，会去找src/img/logo.png这个文件
                             }
@@ -77,9 +85,6 @@ module.exports = {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            config: {
-                                path: './config'
-                            },
                             sourceMap: true
                         }
                     },
@@ -90,7 +95,7 @@ module.exports = {
                         }
                     }
                 ]
-            },
+            },*/
 			{
 				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
 				loader: 'url-loader',
@@ -114,19 +119,22 @@ module.exports = {
 		      }
 		    }
 		 }),
+        // 将 css 抽取到某个文件夹
+		new ExtractTextPlugin({
+			// 生成css文件名
+			filename: 'css/[name].[hash].css'
+		}),
+		new OptimizeCSSPlugin({
+	      cssProcessorOptions: {
+	        safe: true
+	      }
+	    }),
 		//静态资源拷贝
 		new CopyWebpackPlugin([
         {
             from: 'src/static',
             to: 'static'
         }]), 
-        // 将 css 抽取到某个文件夹
-		new ExtractTextPlugin({
-			// 生成css文件名
-			filename: 'css/[name].[hash].css',
-			disable: false,
-			allChunks: true
-		}),
 		// 自动生成 HTML 插件
 		...HTMLPlugins
 	]

@@ -5,6 +5,8 @@ const webpackMerge = require('webpack-merge');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
+var env = config.build.env;
+
 // 合并配置文件
 module.exports = webpackMerge(webpackBase, {
 	output: {
@@ -14,7 +16,10 @@ module.exports = webpackMerge(webpackBase, {
 	},
 	devtool: false,
 	plugins: [
-		// 自动清理 dist 文件夹
+		new webpack.DefinePlugin({
+	      'process.env': env
+	    }),
+	    // 自动清理 dist 文件夹
 		new CleanWebpackPlugin(['dist'], {
 			root: path.resolve(__dirname, `../`)
 		}),
